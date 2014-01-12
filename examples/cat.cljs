@@ -31,7 +31,7 @@
 (go
   (let [img (<! (fetch-image (proxy-request cat)))]
     (big-bang!
-      :initial-state [0 300]
+      :initial-state [0 0]
       :on-tick update-state
       :to-draw (partial render-scene ctx img))))
 
