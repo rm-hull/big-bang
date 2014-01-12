@@ -1,6 +1,7 @@
 # Big-Bang [![Build Status](https://secure.travis-ci.org/rm-hull/big-bang.png)](http://travis-ci.org/rm-hull/big-bang)
 
-ClojureScript game loop, loosely based on Racket's big-bang and implemented on top of core.async
+ClojureScript game loop, loosely based on Racket's [big-bang](http://docs.racket-lang.org/teachpack/2htdpuniverse.html#(form._world._((lib._2htdp/universe..rkt)._big-bang)))
+and implemented on top of _core.async_.
 
 See http://rm-hull.github.io/big-bang/examples.html for some demos
 
@@ -15,7 +16,6 @@ To build and install the library locally, run:
     $ lein test
     $ lein cljsbuild once
     $ lein install
-
 
 ### Including in your project
 
