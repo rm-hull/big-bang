@@ -5,7 +5,7 @@ ClojureScript game loop, loosely based on Racket's [big-bang][1] and implemented
 [1]: http://docs.racket-lang.org/teachpack/2htdpuniverse.html#(form._world._((lib._2htdp/universe..rkt)._big-bang))
 
 
-See http://rm-hull.github.io/big-bang/examples.html for some demos
+See http://rm-hull.github.io/big-bang/example.html for some demos
 
 ### Pre-requisites
 
