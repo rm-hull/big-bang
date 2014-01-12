@@ -1,7 +1,9 @@
 # Big-Bang [![Build Status](https://secure.travis-ci.org/rm-hull/big-bang.png)](http://travis-ci.org/rm-hull/big-bang)
 
-ClojureScript game loop, loosely based on Racket's [big-bang](http://docs.racket-lang.org/teachpack/2htdpuniverse.html#(form._world._((lib._2htdp/universe..rkt)._big-bang)))
-and implemented on top of _core.async_.
+ClojureScript game loop, loosely based on Racket's [big-bang][1] and implemented on top of _core.async_.
+
+[1]: http://docs.racket-lang.org/teachpack/2htdpuniverse.html#(form._world._((lib._2htdp/universe..rkt)._big-bang))
+
 
 See http://rm-hull.github.io/big-bang/examples.html for some demos
 
