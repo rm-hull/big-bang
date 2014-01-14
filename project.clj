@@ -1,4 +1,4 @@
-(defproject rm-hull/inkspot "0.0.1-SNAPSHOT"
+(defproject rm-hull/big-bang "0.0.1-SNAPSHOT"
   :description "big-bang: a ClojureScript game loop, loosely based on Racket's big-bang and implemented on top of core.async"
   :url "https://github.com/rm-hull/big-bang"
   :clojurecript? true
