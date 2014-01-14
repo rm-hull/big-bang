@@ -9,15 +9,23 @@ See http://rm-hull.github.io/big-bang/example.html for some demos
 
 ### Pre-requisites
 
-You will need [Leiningen](https://github.com/technomancy/leiningen) 2.3.4 or above installed.
+You will need [Leiningen](https://github.com/technomancy/leiningen) 2.3.4 or
+above installed.
 
-### Building
+### Building & Testing
 
 To build and install the library locally, run:
 
-    $ lein test
     $ lein cljsbuild once
     $ lein install
+
+To test against [PhantomJS](http://phantomjs.org/), ensure that that
+package is installed properly, and run:
+
+    $ lein cljsbuild test
+
+Alternatively, open ```resources/run-tests.html``` in a browser - this
+executes the tests and the test results are displayed on the page.
 
 ### Including in your project
 
@@ -50,9 +58,13 @@ For maven-based projects, add the following to your `pom.xml`:
 * Deregister event listeners on stop
 * Return list of states on stop if :record? is true, else nil
 * Playback states functionality via :playback
-* External messages via :on-receive with :receive-channel & :send-channel, (make-package w m) & (package? x)
+* External messages via :on-receive with :receive-channel & :send-channel
+* ~~(make-package w m) & (package? x)~~
+* Tests, documentation, examples
 
 ## Known Bugs
+
+* ```lein cljsbuild test``` does not appear to be working properly, returns _"Could not locate test command ."_
 
 ## References
 
