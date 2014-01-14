@@ -21,7 +21,7 @@ To build and install the library locally, run:
 
 ### Including in your project
 
-There is an 'alpha-quality' version hosted at [Clojars](https://clojars.org/rm-hull/wireframes).
+There _will be_ an 'alpha-quality' version hosted at [Clojars](https://clojars.org/rm-hull/big-bang) at some point soon.
 For leiningen include a dependency:
 
 ```clojure
@@ -39,7 +39,18 @@ For maven-based projects, add the following to your `pom.xml`:
 ```
 ## Basic Usage
 
+## Differences from the Racket implementation
+
 ## TODO
+
+* Variable :on-tick rate & re-org. recur/loop with animation-frame
+* Implement :on-key and :on-release (maps to _keydown_ and _keyup_ events respectively)
+* implement :on-mouse, add a (mouse-handler ...) like Racket's (pad-handler ...)
+* Implement :on-touch with (touch-handler ...)
+* Deregister event listeners on stop
+* Return list of states on stop if :record? is true, else nil
+* Playback states functionality via :playback
+* External messages via :on-receive with :receive-channel & :send-channel, (make-package w m) & (package? x)
 
 ## Known Bugs
 
