@@ -64,7 +64,7 @@ For maven-based projects, add the following to your `pom.xml`:
 
 ## Known Bugs
 
-* ```lein cljsbuild test``` does not appear to be working properly, returns _"Could not locate test command ."_
+* ~~```lein cljsbuild test``` does not appear to be working properly, returns _"Could not locate test command."_~~
 
 ## References
 
