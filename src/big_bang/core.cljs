@@ -49,8 +49,8 @@
              on-key on-release on-mouse
              on-receive receive-channel send-channel]}]
   (let [history-builder (if record? conj (constantly nil))
-        stop-when? (or stop-when? (constantly false))
         limit-reached? (if frame-limit #(> % frame-limit) (constantly false))
+        stop-when? (or stop-when? (constantly false))
         tick-rate (or tick-rate 17)] ; 17ms = approx 58.82 FPS
     (go
       (loop [world-state initial-state
@@ -66,5 +66,5 @@
             (send-message send-channel message)
             (recur
               (extract-world-state next-world-state)
-              (history-builder next-world-state)
+              (history-builder history next-world-state)
               (inc frame))))))))
