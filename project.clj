@@ -12,6 +12,7 @@
   :plugins [[lein-cljsbuild "1.0.1"]]
   :source-paths ["src"]
   :cljsbuild {
+    :test-commands  {"phantomjs"  ["phantomjs" "target/unit-test.js"]}
     :builds {
       :main {
         :source-paths ["src"]
