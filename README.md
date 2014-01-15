@@ -4,7 +4,6 @@ ClojureScript game loop, loosely based on Racket's [big-bang][1] and implemented
 
 [1]: http://docs.racket-lang.org/teachpack/2htdpuniverse.html#(form._world._((lib._2htdp/universe..rkt)._big-bang))
 
-
 See http://rm-hull.github.io/big-bang/example.html for some demos
 
 ### Pre-requisites
@@ -51,15 +50,16 @@ For maven-based projects, add the following to your `pom.xml`:
 
 ## TODO
 
-* Variable :on-tick rate & re-org. recur/loop with animation-frame
-* Implement :on-key and :on-release (maps to _keydown_ and _keyup_ events respectively)
-* implement :on-mouse, add a (mouse-handler ...) like Racket's (pad-handler ...)
-* Implement :on-touch with (touch-handler ...)
+* ~~Variable ```:on-tick``` rate & re-org. recur/loop with animation-frame~~
+* Implement ```:target-id``` element for event handlers to attach to (default to _document_)
+* Implement ```:on-key``` and ```:on-release``` (maps to _keydown_ and _keyup_ events respectively)
+* implement ```:on-mouse```, add a ```(mouse-handler ...)``` like Racket's ```(pad-handler ...)```
+* Implement ```:on-touch``` with ```(touch-handler ...)```
 * Deregister event listeners on stop
-* Return list of states on stop if :record? is true, else nil
-* Playback states functionality via :playback
-* External messages via :on-receive with :receive-channel & :send-channel
-* ~~(make-package w m) & (package? x)~~
+* ~~Return list of states on stop if ```:record?``` is true, else ```nil```~~
+* Playback states functionality via ```:playback```
+* External messages via ```:on-receive``` with ```:receive-channel``` & ```:send-channel```
+* ~~```(make-package w m)```, ```(package? x)```, extraction functions~~
 * Tests, documentation, examples
 
 ## Known Bugs
