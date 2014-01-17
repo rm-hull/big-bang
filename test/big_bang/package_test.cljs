@@ -1,7 +1,7 @@
-(ns big-bang.core-test
+(ns big-bang.package-test
   (:use-macros [cljs-test.macros :only [deftest is= is]])
   (:require [cljs-test.core :as test]
-            [big-bang.core :refer [package? make-package extract-message extract-world-state]]))
+            [big-bang.package :refer [package? make-package extract-message extract-world-state]]))
 
 (deftest make-and-extract-from-packages
   (is (package? {:world-state "STATE" :message "MESSAGE"}))
