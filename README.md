@@ -46,6 +46,39 @@ For maven-based projects, add the following to your `pom.xml`:
 ```
 ## Basic Usage
 
+### Regular Ticking
+
+The ```big-bang.timer``` namespace provides a mechanism that wraps the
+javascript ```setInterval``` callback, sending a predetermined payload
+on a channel at regular intervals:
+
+```clojure
+(def ticker (interval-ticker 100))              ; [1]
+
+(go
+  (loop []
+    (when-let [x (<! (:timer-chan ticker))]     ; [2]
+      (.log js/console (str "Received: " x ))
+      (recur))))
+
+(go
+  (<! (timeout 2000)) ; pause for a short time  ; [3]
+  (stop! ticker))                               ; [4]
+```
+
+At [1], a ticker is created and started; while there is no consumer taking
+events from the timer channel, messages are dropped in order to prevent
+a backlog. Similarly if the consumer loop cannot keep up with the rate that
+the ticker is producing, then events will similarly be dropped.
+
+At [2], inside a go block, a value is consumed from the ticker's timer channel.
+If a ```nil``` value is returned from the channel, it can be assumed that the
+ticker has elsewhere been stopped, and the loop can be terminated. Step [3] then
+incurs a 2 second delay before stopping the ticker at step [4].
+
+The ticker is used internally to drive state transitions in the ```big-bang!```
+game loop
+
 ## Differences from the Racket implementation
 
 ## TODO
