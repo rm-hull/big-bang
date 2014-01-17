@@ -1,8 +1,8 @@
 # Big-Bang [![Build Status](https://secure.travis-ci.org/rm-hull/big-bang.png)](http://travis-ci.org/rm-hull/big-bang)
 
-ClojureScript game loop, loosely based on Racket's [big-bang][1] and implemented on top of _core.async_.
+ClojureScript game loop, loosely based on Racket's [big-bang][a] and implemented on top of _core.async_.
 
-[1]: http://docs.racket-lang.org/teachpack/2htdpuniverse.html#(form._world._((lib._2htdp/universe..rkt)._big-bang))
+[a]: http://docs.racket-lang.org/teachpack/2htdpuniverse.html#(form._world._((lib._2htdp/universe..rkt)._big-bang))
 
 See http://rm-hull.github.io/big-bang/example.html for some demos
 
@@ -66,8 +66,8 @@ on a channel at regular intervals:
   (stop! ticker))                               ; [4]
 ```
 
-At [1], a ticker is created and started; while there is no consumer taking
-events from the timer channel, messages are dropped in order to prevent
+At [1], a ticker is created and started; note that, while there is no consumer
+taking events from the timer channel, messages are dropped in order to prevent
 a backlog. Similarly if the consumer loop cannot keep up with the rate that
 the ticker is producing, then events will similarly be dropped.
 
