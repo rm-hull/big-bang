@@ -105,6 +105,7 @@ game loop
 * https://en.wikipedia.org/wiki/Pixel_art_scaling_algorithms#Pixel_art_scaling_algorithms
 * https://code.google.com/p/hqx/wiki/ReadMe
 * http://simonowen.com/sam/articles/pacemu/
+* http://www.lugnet.com/admin/plan/map/pacman.html
 
 ## License
 
