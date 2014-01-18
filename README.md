@@ -102,10 +102,6 @@ game loop
 ## References
 
 * http://docs.racket-lang.org/teachpack/2htdpuniverse.html#(form._world._((lib._2htdp/universe..rkt)._big-bang))
-* https://en.wikipedia.org/wiki/Pixel_art_scaling_algorithms#Pixel_art_scaling_algorithms
-* https://code.google.com/p/hqx/wiki/ReadMe
-* http://simonowen.com/sam/articles/pacemu/
-* http://www.lugnet.com/admin/plan/map/pacman.html
 
 ## License
 
