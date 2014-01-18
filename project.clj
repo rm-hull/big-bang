@@ -6,7 +6,7 @@
             :url "http://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/clojurescript "0.0-2138"]
-                 [org.clojure/core.async "0.1.242.0-44b1e3-alpha"]
+                 [org.clojure/core.async "0.1.267.0-0d7780-alpha"]
                  [rm-hull/cljs-dataview "0.0.1-SNAPSHOT"]
                  [rm-hull/cljs-test "0.0.7"]]
   :plugins [[lein-cljsbuild "1.0.1"]]
