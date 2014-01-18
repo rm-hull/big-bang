@@ -37,6 +37,7 @@ energy pills.
 
 ## References
 
+* http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#drawing-images
 * https://en.wikipedia.org/wiki/Pixel_art_scaling_algorithms#Pixel_art_scaling_algorithms
 * https://code.google.com/p/hqx/wiki/ReadMe
 * http://simonowen.com/sam/articles/pacemu/
