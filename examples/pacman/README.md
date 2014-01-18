@@ -21,9 +21,10 @@ version.
 ### Sprites
 
 [sam_gfx.png](https://github.com/rm-hull/big-bang/blob/master/examples/pacman/data/sam_gfx.png)
-is a 384x288 sprite sheet comprising of 12x12 and 24x24 sprites. It was 
+is a 384x240 sprite sheet comprising of 12x12 and 24x24 sprites. It was 
 originally created by Simon Owen (derived from http://simonowen.com/sam/articles/pacemu/)
-but with the borders trimmed. Also, see an enlarged version with gridlines:
+but has been modified to remove some duplication, as well as having the borders trimmed. 
+Also, see an enlarged version with gridlines:
 
 ![gridlines](https://raw.github.com/rm-hull/big-bang/master/examples/pacman/gridlines.png)
 
