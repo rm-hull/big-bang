@@ -32,9 +32,7 @@ Uses box-drawing ANSI characters (see [wikipedia](https://en.wikipedia.org/wiki/
 for the map borders, a dot for the normal pills and a capital O for the 
 energy pills.
 
-#### Level 1
-
-![level1](https://raw2.github.com/rm-hull/big-bang/master/examples/pacman/data/1.txt)
+* [Level 1](https://raw2.github.com/rm-hull/big-bang/master/examples/pacman/data/1.txt)
 
 ## References
 
