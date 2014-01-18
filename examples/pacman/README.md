@@ -23,8 +23,9 @@ version.
 [sam_gfx.png](https://github.com/rm-hull/big-bang/blob/master/examples/pacman/data/sam_gfx.png)
 is a 384x288 sprite sheet comprising of 12x12 and 24x24 sprites. It was 
 originally created by Simon Owen (derived from http://simonowen.com/sam/articles/pacemu/)
-but with the borders trimmed. Also, see an enlarged version with 
-[gridlines](https://github.com/rm-hull/big-bang/blob/master/examples/pacman/dgridlines.png).
+but with the borders trimmed. Also, see an enlarged version with gridlines:
+
+![gridlines](https://raw.github.com/rm-hull/big-bang/master/examples/pacman/gridlines.png)
 
 ### Maps
 
@@ -32,7 +33,7 @@ Uses box-drawing ANSI characters (see [wikipedia](https://en.wikipedia.org/wiki/
 for the map borders, a dot for the normal pills and a capital O for the 
 energy pills.
 
-* [Level 1](https://raw2.github.com/rm-hull/big-bang/master/examples/pacman/data/1.txt)
+* [Level 1](https://raw.github.com/rm-hull/big-bang/master/examples/pacman/data/1.txt)
 
 ## References
 
