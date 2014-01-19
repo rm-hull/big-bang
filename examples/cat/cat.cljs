@@ -29,22 +29,23 @@
   (.clearRect ctx 0 0 800 600)
   (.drawImage ctx cat-image x y))
 
-(go
-  (let [img (<! (fetch-image (proxy-request cat)))]
-    (big-bang!
-      :initial-state [0 0]
-      :on-tick update-state
-      :to-draw (partial render-scene ctx img))))
+(defn demo []
+  (go
+    (let [img (<! (fetch-image (proxy-request cat)))]
+      (big-bang!
+        :initial-state [0 0]
+        :on-tick update-state
+        :to-draw (partial render-scene ctx img))))
 
-(def ticker (interval-ticker 17))
+  (def ticker (interval-ticker 17))
 
-(go
-  (loop []
-    (when-let [x (<! (:timer-chan ticker))]
-      (.log js/console (str "Received: " x ))
-      (recur))))
+  (go
+    (loop []
+      (when-let [x (<! (:timer-chan ticker))]
+        (.log js/console (str "Received: " x ))
+        (recur))))
 
-(go
-  (<! (timeout 10000)) ; pause for a short time
-  (stop! ticker))
-
+  (go
+    (<! (timeout 10000)) ; pause for a short time
+    (stop! ticker))
+  )
