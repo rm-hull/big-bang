@@ -1,6 +1,6 @@
 # Pac Man
 
-Notes for on-going development of ClojureScript Pac Man using 
+Notes for on-going development of ClojureScript Pac Man using
 [big-bang](https://github.com/rm-hull/big-bang) as a proof-of-concept.
 
 ## Building and running
@@ -20,10 +20,11 @@ version.
 
 ### Sprites
 
-[sam_gfx.png](https://github.com/rm-hull/big-bang/blob/master/examples/pacman/data/sam_gfx.png)
-is a 384x240 sprite sheet comprising of 12x12 and 24x24 sprites. It was 
+[spritemap-384.png](https://github.com/rm-hull/big-bang/blob/master/examples/pacman/data/spritemap-384.png) and
+[spritemap-192.png](https://github.com/rm-hull/big-bang/blob/master/examples/pacman/data/spritemap-192.png)
+are a pair of sprite sheets comprising of 12x12 and 24x24 (or 6x6 and 12x12) sprites. It was
 originally created by Simon Owen (derived from http://simonowen.com/sam/articles/pacemu/)
-but has been modified to remove some duplication, as well as having the borders trimmed. 
+but has been modified to remove some duplication, as well as having the borders trimmed.
 Also, see an enlarged version with gridlines:
 
 ![gridlines](https://raw.github.com/rm-hull/big-bang/master/examples/pacman/gridlines.png)
@@ -31,7 +32,7 @@ Also, see an enlarged version with gridlines:
 ### Maps
 
 Uses box-drawing ANSI characters (see [wikipedia](https://en.wikipedia.org/wiki/Box-drawing_characters))
-for the map borders, a dot for the normal pills and a capital O for the 
+for the map borders, a dot for the normal pills and a capital O for the
 energy pills.
 
 * [Level 1](https://raw.github.com/rm-hull/big-bang/master/examples/pacman/data/1.txt)
