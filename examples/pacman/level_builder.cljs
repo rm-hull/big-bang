@@ -1,83 +1,78 @@
 (ns big-bang.examples.pacman.level-builder
   (:require [cljs.core.async :refer [chan <! map<] :as async]
             [clojure.string :refer [split-lines]]
-            [dataview.loader :refer [fetch-image fetch-text]]
             [dataview.ops :refer [eod? read-delimited-string create-reader]]
-            [big-bang.core :refer [big-bang!]]
-            [big-bang.timer :refer [interval-ticker stop!]])
+            [big-bang.examples.pacman.config :as config]
+            [big-bang.examples.pacman.util :refer [posn into-channel]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
-(set! *print-fn* (fn [s] (.log js/console s)))
-
-(defn proxy-request [url]
-  (str
-    "http://programming-enchiladas.destructuring-bind.org/proxy?url="
-    (js/encodeURI url)))
-
-(def sprites "https://raw.github.com/rm-hull/big-bang/master/examples/pacman/data/spritemap-192.png")
-
-(def level-1 "https://raw.github.com/rm-hull/big-bang/master/examples/pacman/data/1.txt")
-
-(def canvas (.getElementById js/document "canvas"))
-
-(def ctx (.getContext canvas "2d"))
-
-(def cell-size 12)
-(def width 29) ; 28 + newline
-(def height 31)
-
-(def canvas-coords
-  (for [y (range 0 height)
-        x (range 0 width)]
-    [(* x cell-size) (* y cell-size)]))
-
 (def pieces
-  { "\u250F" {:x (* cell-size  4) :y (* cell-size 4) :w cell-size :h cell-size} ; ┏
-    "\u2501" {:x (* cell-size  0) :y (* cell-size 4) :w cell-size :h cell-size} ; ━
-    "\u2513" {:x (* cell-size  5) :y (* cell-size 4) :w cell-size :h cell-size} ; ┓
-    "\u2517" {:x (* cell-size  2) :y (* cell-size 4) :w cell-size :h cell-size} ; ┗
-    "\u251B" {:x (* cell-size  3) :y (* cell-size 4) :w cell-size :h cell-size} ; ┛
-    "\u2503" {:x (* cell-size  1) :y (* cell-size 4) :w cell-size :h cell-size} ; ┃
-    "."      {:x (* cell-size  8) :y (* cell-size 0) :w (/ cell-size 2) :h (/ cell-size 2) :target-offset (/ cell-size 4)}
-    "O"      {:x (* cell-size 10) :y (* cell-size 0) :w (/ cell-size 2) :h (/ cell-size 2) :target-offset (/ cell-size 4)}})
+  { "\u250F" (posn 4 4 config/cell-size) ; ┏
+    "\u2501" (posn 0 4 config/cell-size) ; ━
+    "\u2513" (posn 5 4 config/cell-size) ; ┓
+    "\u2517" (posn 2 4 config/cell-size) ; ┗
+    "\u251B" (posn 3 4 config/cell-size) ; ┛
+    "\u2503" (posn 1 4 config/cell-size) ; ┃
+    "."      (assoc (posn 16 0 (/ config/cell-size 2)) :target-offset (/ config/cell-size 4))
+    "O"      (assoc (posn 20 0 (/ config/cell-size 2)) :target-offset (/ config/cell-size 4))})
 
-(defn convert-cell [[dx dy] map-piece]
+(defn- make-directive
+  "Takes target co-ordinates and a map-piece character. The layout directive
+   for the map-piece is looked up and combined with the co-ords. The return
+   value is a vector suitable for applying directly to ctx.drawImage"
+  [[dx dy] map-piece]
   (let [{:keys [x y w h target-offset]} (pieces map-piece)]
     [x y w h (+ dx target-offset) (+ dy target-offset) w h]))
 
-(defn convert-level
+(defn- convert-level
   "Converts a stream of unicode characters representing a level into
    a data structure indicating where the cell is to be drawn on a
    target canvas, and the source that will be drawn."
   [raw-level-data]
-  (map
-    convert-cell
-    canvas-coords
-    (seq raw-level-data)))
+  (let [canvas-coords (for [y (range 0 config/height)
+                            x (range 0 config/width)]
+                        (map (partial * config/cell-size) [x y]))]
+    (map
+      make-directive
+      canvas-coords
+      (seq raw-level-data))))
 
-(defn fetch-level [url]
-  (async/map<
-    convert-level
-    (fetch-text url)))
+(defn- make-ctx
+  "Creates a CanvasRenderingContext2D with the given width and height."
+  [[width height]]
+  (let [canvas (.createElement js/document "canvas")]
+    (set! (.-width canvas) width)
+    (set! (.-height canvas) height)
+    (.getContext canvas "2d")))
 
-(defn build-image [ctx level sprite]
-  (if (empty? level)
-    ctx
-    (when-let [[sx sy sw sh dx dy dw dh] (first level)]
-      (.drawImage ctx sprite sx sy sw sh dx dy dw dh)
-      (recur ctx (rest level) sprite))))
+(defn- draw-cells
+  "Draws cells from the sprite-map onto the given context according
+  to the layout directives in the level. The context is returned
+  (for threading)."
+  [ctx level sprite-map]
+  (loop [level level]
+    (if (empty? level)
+      ctx
+      (when-let [[sx sy sw sh dx dy dw dh] (first level)]
+        (.drawImage ctx sprite-map sx sy sw sh dx dy dw dh)
+        (recur (rest level))))))
 
-(defn create-background-image [ctx level-chan sprite-chan]
-  (async/map (partial build-image ctx) [level-chan sprite-chan]))
+(defn- create-background-image [level-chan sprite-chan]
+  (async/map
+    (partial draw-cells (make-ctx config/background-size))
+    [level-chan sprite-chan]))
+
+(def get-background
+  (memoize
+    (fn [n]
+      (let [c (chan)]
+        (go (into-channel c
+              (repeat (<! (create-background-image
+                            (async/take 1 (async/map< convert-level (config/level n)))
+                            (async/take 1 config/sprites))))))
+        c))))
 
 (defn demo[]
   (go
-    ;(let [c (fetch-level (proxy-request level-1))]
-    ;  (println (<! c))
-    ;  (println (<! c)))
-
-    (println
-      (<! (create-background-image
-            ctx
-            (fetch-level (proxy-request level-1))
-            (fetch-image (proxy-request sprites)))))))
+    (let [background-ctx (<! (get-background 1))]
+      (.drawImage config/ctx (.-canvas background-ctx) 20 20))))
