@@ -27,7 +27,7 @@
   :sprite-map "https://raw.github.com/rm-hull/big-bang/master/examples/pacman/data/spritemap-192.png"
   :levels ["https://raw.github.com/rm-hull/big-bang/master/examples/pacman/data/" ".txt"]})
 
-(def sprites (let [c (chan)]
+(def sprites (let [c (chan 1)]
                (go (into-channel c (repeat (<! (fetch-image (proxy-request (:sprite-map url)))))))
                c))
 
@@ -36,6 +36,6 @@
     (fn [n]
       (let [[prefix suffix] (:levels url)
             url (str prefix n suffix)
-            c (chan)]
+            c (chan 1)]
         (go (into-channel c (repeat (<! (fetch-text (proxy-request url))))))
         c))))
