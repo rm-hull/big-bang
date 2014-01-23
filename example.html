@@ -21,10 +21,22 @@
         <!-- MAIN CONTENT -->
         <div id="main_content_wrap" class="outer">
           <section id="main_content" class="inner">
-              <p>See: <a href="https://github.com/rm-hull/big-bang/blob/master/examples/cat.cljs">https://github.com/rm-hull/big-bang/blob/master/examples/cat.cljs</a></p>
-            <canvas id="canvas" width="800" height="300"></canvas>
-            <script type="text/javascript" src="http://rm-hull.github.io/big-bang/target/example.js"></script>
-        </section>
+              <div>
+                <p>See: <a href="https://github.com/rm-hull/big-bang/blob/master/examples/cat/cat.cljs">https://github.com/rm-hull/big-bang/blob/master/examples/cat.cljs</a></p>
+                <canvas id="cat-canvas" width="800" height="220"></canvas>
+              </div>
+              <div>
+                <p>See: <a href="https://github.com/rm-hull/big-bang/blob/master/examples/pacman/">https://github.com/rm-hull/big-bang/blob/master/examples/pacman</a></p>
+                <div style="padding: 20px; background-color: black; color: white">
+                  <canvas id="pacman-canvas" width="400" height="400"></canvas>
+                </div>
+              </div>
+            </section>
         </div>
+          <script type="text/javascript" src="http://rm-hull.github.io/big-bang/target/example.js"></script>
+          <script type="text/javascript">
+            big_bang.examples.cat.demo();
+            big_bang.examples.pacman.main.start_game();
+          </script>
     </body>
 </html>
