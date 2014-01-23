@@ -7,6 +7,8 @@
   (:require-macros
     [cljs.core.async.macros :refer [go]]))
 
+(enable-console-print!)
+
 ; -------------------- namespace this ----------------
 (defn make-ghost []
   {}) ; TODO

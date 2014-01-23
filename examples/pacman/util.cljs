@@ -2,8 +2,6 @@
   (:require [cljs.core.async :refer [<! >! chan close!] :as async])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
-(set! *print-fn* (fn [s] (.log js/console s)))
-
 (defn posn [x y sz]
   {:x (* sz x) :y (* sz y) :w sz :h sz})
 
