@@ -7,7 +7,8 @@
 
 (defn interval-ticker
   "Creates and starts an interval timer, regularly delivering messages to a
-   timer channel (accessible via :timer-chan in the returned map).
+   timer channel, accessible via (data-channel ...) in the returned IChannelSource
+   object.
 
    The payload message, by default, contains the system time in milliseconds,
    but can be supplied via the second optional argument, which should be a
@@ -31,6 +32,6 @@
           timer-chan)
 
         (shutdown! [this]
-           (go
-             (close! comm-chan)
-             (js/clearInterval interval-id)))))))
+          (go
+            (close! comm-chan)
+            (js/clearInterval interval-id)))))))
