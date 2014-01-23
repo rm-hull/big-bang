@@ -11,12 +11,6 @@
     (js/encodeURI url)))
 
 
-(def cat "https://gist.github.com/rm-hull/8859515c9dce89935ac2/raw/cat_08.jpg")
-
-(def canvas (.getElementById js/document "canvas"))
-
-(def ctx (.getContext canvas "2d"))
-
 (defn increment-and-wrap [x limit]
   (if (< x limit)
     (inc x)
@@ -30,12 +24,15 @@
   (.drawImage ctx cat-image x y))
 
 (defn demo []
-  (go
-    (let [img (<! (fetch-image (proxy-request cat)))]
-      (big-bang!
-        :initial-state [0 0]
-        :on-tick update-state
-        :to-draw (partial render-scene ctx img))))
+  (let [cat "https://gist.github.com/rm-hull/8859515c9dce89935ac2/raw/cat_08.jpg"
+        canvas (.getElementById js/document "cat-canvas")
+        ctx (.getContext canvas "2d")]
+    (go
+      (let [img (<! (fetch-image (proxy-request cat)))]
+        (big-bang!
+          :initial-state [0 0]
+          :on-tick update-state
+          :to-draw (partial render-scene ctx img)))))
 
   (def ticker (interval-ticker 17))
 
@@ -46,6 +43,5 @@
         (recur))))
 
   (go
-    (<! (timeout 10000)) ; pause for a short time
-    (stop! ticker))
-  )
+    (<! (timeout 2000)) ; pause for a short time
+    (stop! ticker)))
