@@ -1,6 +1,7 @@
 (ns big-bang.core
   (:require [cljs.core.async :refer [<! >! chan timeout]]
-            [big-bang.package :refer [package? extract-message extract-world-state]])
+            [big-bang.package :refer [package? extract-message extract-world-state]]
+            [big-bang.timer :refer [interval-ticker stop!]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (def animation-frame
@@ -24,14 +25,20 @@
   (let [history-builder (if record? conj (constantly nil))
         limit-reached? (if frame-limit #(> % frame-limit) (constantly false))
         stop-when? (or stop-when? (constantly false))
-        tick-rate (or tick-rate 17)] ; 17ms = approx 58.82 FPS
+        ticker (interval-ticker (or tick-rate 17))] ; 17ms = approx 58.82 FPS
     (go
       (loop [world-state initial-state
              history     []
              frame       0]
-        (<! (timeout tick-rate))
+        (<! (:timer-chan ticker))
         (if (or (limit-reached? frame) (stop-when? world-state))
-          history
+
+          ; initiate shutdown
+          (do
+            (stop! ticker)
+            history)
+
+          ; keep on truckin'
           (let [handler-result (on-tick world-state)
                 next-world-state (extract-world-state handler-result)
                 message (extract-message handler-result)]
