@@ -4,9 +4,9 @@
             [dataview.loader :refer [fetch-image fetch-text]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
-(def canvas (.getElementById js/document "canvas"))
+(def canvas (.getElementById js/document "pacman-canvas"))
 
-(def ctx (.getContext canvas "2d"))
+(def ctx (when canvas (.getContext canvas "2d")))
 
 (def cell-size 12)
 
@@ -16,6 +16,12 @@
 
 (def background-size
   (mapv (partial * cell-size) [width height]))
+
+(def start-position
+  "Pacman's starting position"
+  (mapv (partial * cell-size) [13.5 23]))
+
+(def frighten-duration 1000) ; TODO arbitrary number alert
 
 (def url {
   :sprite-map "https://raw.github.com/rm-hull/big-bang/master/examples/pacman/data/spritemap-192.png"

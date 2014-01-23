@@ -13,6 +13,7 @@
     "\u2517" (posn 2 4 config/cell-size) ; ┗
     "\u251B" (posn 3 4 config/cell-size) ; ┛
     "\u2503" (posn 1 4 config/cell-size) ; ┃
+    ; TODO below bits to be removed - pills to draw separately
     "."      (assoc (posn 16 0 (/ config/cell-size 2)) :target-offset (/ config/cell-size 4))
     "O"      (assoc (posn 20 0 (/ config/cell-size 2)) :target-offset (/ config/cell-size 4))})
 
@@ -71,8 +72,3 @@
                             (async/take 1 (async/map< convert-level (config/level n)))
                             (async/take 1 config/sprites))))))
         c))))
-
-(defn demo[]
-  (go
-    (let [background-ctx (<! (get-background 1))]
-      (.drawImage config/ctx (.-canvas background-ctx) 20 20))))

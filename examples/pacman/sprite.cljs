@@ -1,11 +1,15 @@
 (ns big-bang.examples.pacman.sprite
-  (:require [cljs.core.async :refer [chan <! map<] :as async]
-            [big-bang.examples.pacman.config :refer [cell-size] :as config]
-            [big-bang.examples.pacman.util :refer [posn into-channel]])
-  (:require-macros [cljs.core.async.macros :refer [go]]))
+  (:require [big-bang.examples.pacman.config :refer [cell-size] :as config]
+            [big-bang.examples.pacman.util :refer [posn]]))
 
-(defn- frames [& frame-refs]
-  (go (into-channel (cycle frame-refs))))
+(defn- frames
+  "Returns a function which given a frame number, will return the appropriate
+   frame reference."
+  [& frame-refs]
+  (let [v (mapv vals frame-refs)
+        cnt (count v)]
+    (fn [frame-num]
+      (v (mod frame-num cnt)))))
 
 (def sprites {
   :pacman {
@@ -34,3 +38,6 @@
   :inky {}   ; cyan
   :clyde {}  ; orange
 })
+
+(defn spritemap-position [refs frame]
+  ((get-in sprites refs) frame))

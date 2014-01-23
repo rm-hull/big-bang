@@ -11,18 +11,20 @@
   "Pours the contents of the collection into a channel. A bit like
   core.async/to-chan, but slightly different in some way I can't
   yet explain."
-  ([coll] (into-channel (chan) coll))
-  ([chan coll]
-    (go
-      (loop [xs coll]
-        (if (empty? xs)
-          (close! chan)
-          (do
-            (>! chan (first xs))
-            (recur (rest xs))))))
-    chan))
+  [chan coll]
+  (go
+    (loop [xs coll]
+      (if (empty? xs)
+        (close! chan)
+        (do
+          (>! chan (first xs))
+          (recur (rest xs)))))))
 
 (defn proxy-request [url]
   (str
     "http://programming-enchiladas.destructuring-bind.org/proxy?url="
     (js/encodeURI url)))
+
+(defn with [arg & fns]
+  (doseq [fn fns]
+    (fn arg)))
