@@ -2,8 +2,9 @@
   (:require
     [cljs.core.async :refer [<!] :as async]
     [big-bang.core :refer [big-bang!]]
-    [big-bang.examples.pacman.config :refer [width height cell-size ctx] :as config]
-    [big-bang.examples.pacman.render :refer [render-frame]])
+    [big-bang.examples.pacman.config :refer [width height cell-size] :as config]
+    [big-bang.examples.pacman.render :refer [make-render-frame]]
+    [big-bang.examples.pacman.level-builder :refer [get-background]])
   (:require-macros
     [cljs.core.async.macros :refer [go]]))
 
@@ -123,8 +124,14 @@
    }})
 
 (defn start-game []
-  (let [n 1]
-    (go
+  (go
+    (let [n 1
+          sprite-map (<! config/sprites)
+          backdrop   (.-canvas (<! (get-background n)))
+          render-frame (make-render-frame
+                         sprite-map
+                         backdrop
+                         config/background-size)]
       (big-bang!
         :initial-state (make-initial-state n (<! (config/level n)))
         :on-tick update-state
