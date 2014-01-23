@@ -46,6 +46,31 @@ For maven-based projects, add the following to your `pom.xml`:
 ```
 ## Basic Usage
 
+### Event Handling and ```IChannelSource```
+
+The ```big-bang.event-handler``` namespace provides a function that installs
+event-listeners onto DOM elements, and rather than implementing a callback
+architecture, the handler instead returns a reified ```IChannelSource``` object;
+this exposes a channel onto which events are placed and a facility to de-install
+the event listener.
+
+```clojure
+(def listener (add-event-listener (.-body js/document) :click))
+
+(go
+  (loop []
+    (when-let [e (<! (data-channel listener))]
+      (.log js/console (str "Received: " x))
+      (recur)))))
+
+(go
+  (<! (timeout 20000))
+  (shutdown! listener))
+```
+
+Multiple event listeners are used internally to drive state transitions
+in the ```big-bang!``` game loop on key presses, mouse events, etc.
+
 ### Regular Ticking
 
 The ```big-bang.timer``` namespace provides a mechanism that wraps the
@@ -57,14 +82,16 @@ on a channel at regular intervals:
 
 (go
   (loop []
-    (when-let [x (<! (:timer-chan ticker))]     ; [2]
+    (when-let [x (<! (data-channel ticker))]    ; [2]
       (.log js/console (str "Received: " x ))
       (recur))))
 
 (go
   (<! (timeout 2000)) ; pause for a short time  ; [3]
-  (stop! ticker))                               ; [4]
+  (shutdown! ticker))                           ; [4]
 ```
+
+Notice the similarity to the prior event listener example above.
 
 At [1], a ticker is created and started; note that, while there is no consumer
 taking events from the timer channel, messages are dropped in order to prevent
@@ -77,7 +104,7 @@ ticker has elsewhere been stopped, and the loop can be terminated. Step [3] then
 incurs a 2 second delay before stopping the ticker at step [4].
 
 The ticker is used internally to drive state transitions in the ```big-bang!```
-game loop
+game loop.
 
 ## Differences from the Racket implementation
 

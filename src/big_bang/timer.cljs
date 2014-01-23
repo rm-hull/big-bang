@@ -1,6 +1,9 @@
 (ns big-bang.timer
-  (:require [cljs.core.async :refer [<! >! close! chan dropping-buffer]])
-  (:require-macros [cljs.core.async.macros :refer [go]]))
+  (:require
+    [cljs.core.async :refer [<! >! close! chan dropping-buffer]]
+    [big-bang.protocol :refer [data-channel shutdown!]])
+  (:require-macros
+    [cljs.core.async.macros :refer [go]]))
 
 (defn interval-ticker
   "Creates and starts an interval timer, regularly delivering messages to a
@@ -22,15 +25,12 @@
                             (close! timer-chan))))
           interval-id (js/setInterval interval-fn msec)]
       (go (>! comm-chan interval-id)) ; bootstrap via the comm-chan
-      {:comm-chan comm-chan
-       :timer-chan timer-chan
-       :interval-id interval-id})))
+      (reify
+        big-bang.protocol/IChannelSource
+        (data-channel [this]
+          timer-chan)
 
-(defn stop!
-  "Closes the timer's comms channel which prevents further payload
-   messages being emitted. The associated interval is also cancelled.
-   There is no way to restart a timer once stopped."
-  [{:keys [comm-chan timer-chan interval-id]}]
-  (go
-    (close! comm-chan)
-    (js/clearInterval interval-id)))
+        (shutdown! [this]
+           (go
+             (close! comm-chan)
+             (js/clearInterval interval-id)))))))

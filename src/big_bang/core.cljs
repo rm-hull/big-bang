@@ -1,8 +1,12 @@
 (ns big-bang.core
-  (:require [cljs.core.async :refer [<! >! chan timeout]]
-            [big-bang.package :refer [package? extract-message extract-world-state]]
-            [big-bang.timer :refer [interval-ticker stop!]])
-  (:require-macros [cljs.core.async.macros :refer [go]]))
+  (:require
+    [cljs.core.async :refer [<! >! chan]]
+    [big-bang.protocol :refer [data-channel shutdown!]]
+    [big-bang.package :refer [package? extract-message extract-world-state]]
+    [big-bang.timer :refer [interval-ticker]]
+    [big-bang.event-handler :refer [add-event-listener]])
+  (:require-macros
+    [cljs.core.async.macros :refer [go]]))
 
 (def animation-frame
   (or (.-requestAnimationFrame js/window)
@@ -30,12 +34,12 @@
       (loop [world-state initial-state
              history     []
              frame       0]
-        (<! (:timer-chan ticker))
+        (<! (data-channel ticker))
         (if (or (limit-reached? frame) (stop-when? world-state))
 
           ; initiate shutdown
           (do
-            (stop! ticker)
+            (shutdown! ticker)
             history)
 
           ; keep on truckin'
