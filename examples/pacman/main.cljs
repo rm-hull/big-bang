@@ -2,6 +2,7 @@
   (:require
     [cljs.core.async :refer [<!] :as async]
     [big-bang.core :refer [big-bang!]]
+    [big-bang.event-handler :refer [which prevent-default]]
     [big-bang.examples.pacman.config :refer [width height cell-size] :as config]
     [big-bang.examples.pacman.render :refer [make-render-frame]]
     [big-bang.examples.pacman.level-builder :refer [get-background]])
@@ -123,6 +124,17 @@
      :number level-num
    }})
 
+(def directions
+  { 37 :left
+    38 :up
+    39 :right
+    40 :down})
+
+(defn change-direction [event world-state]
+  (if-let [dir (directions (which event))]
+    (assoc world-state :direction dir)
+    world-state))
+
 (defn start-game []
   (go
     (let [n 1
@@ -135,4 +147,5 @@
       (big-bang!
         :initial-state (make-initial-state n (<! (config/level n)))
         :on-tick update-state
+        :on-key change-direction
         :to-draw render-frame))))
