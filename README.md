@@ -9,6 +9,7 @@ punch outside and twiddle some IO or paint some pixels.
 
 See http://rm-hull.github.io/big-bang/example.html for some in-progress demos,
 and a for a face-off<sup>*</sup> comparison between Big-Bang and [OM][c] here:
+
 [Om mouse move][d] vs. [Big Bang mouse move][e]
 
 <sup>*</sup> - tongue-in-cheek, of course. ツ
