@@ -15,12 +15,14 @@
   (data-channel [this])
   (shutdown! [this]))
 
+(defn wrap-channel [c]
+  (reify
+      IChannelSource
+      (data-channel [this] c)
+      (shutdown! [this] (close! c))))
+
 (defn no-op
   "Does nothing, so guaranteed to never deliver a message
    on the data channel."
   []
-  (let [c (chan)]
-    (reify
-      IChannelSource
-      (data-channel [this] c)
-      (shutdown! [this] (close! c)))))
+  (wrap-channel (chan)))
