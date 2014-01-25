@@ -1,5 +1,5 @@
 (ns big-bang.protocol
-  (:require [cljs.core.async :refer [chan]]))
+  (:require [cljs.core.async :refer [chan close!]]))
 
 ; This protocol encapsulates a channel and the ability to
 ; close that channel, ...erm, so why not just use a channel?
