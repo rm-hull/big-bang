@@ -1,10 +1,19 @@
 # Big-Bang [![Build Status](https://secure.travis-ci.org/rm-hull/big-bang.png)](http://travis-ci.org/rm-hull/big-bang)
 
 ClojureScript game loop, loosely based on Racket's [big-bang][a] and implemented on top of _core.async_.
+It is a pure ClojureScript implementation with no external Javascript dependencies. Using Big-Bang encourages
+you to implement what would be otherwise stateful code in a pure functional manner; of course, inevitably,
+at some point you have to punch outside and twiddle some IO or paint some pixels.
 
 [a]: http://docs.racket-lang.org/teachpack/2htdpuniverse.html#(form._world._((lib._2htdp/universe..rkt)._big-bang))
 
-See http://rm-hull.github.io/big-bang/example.html for some demos
+See http://rm-hull.github.io/big-bang/example.html for some in-progress demos, and a face-off<sup>*</sup>
+between Big-Bang and [OM](https://github.com/swannodette/om) here:
+
+[Om mouse move](http://programming-enchiladas.destructuring-bind.org/rm-hull/8617445) vs.
+[Big Bang mouse move](http://programming-enchiladas.destructuring-bind.org/rm-hull/8617788)
+
+<sup>*</sup> - tongue-in-cheek, of course. ツ
 
 ### Pre-requisites
 

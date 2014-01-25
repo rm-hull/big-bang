@@ -24,26 +24,40 @@
   "Loosely based on Racket's big-bang, but executes in a go-block."
   [& {:keys [initial-state stop-when? frame-limit to-draw
              on-tick tick-rate record? playback
-             on-key on-release on-mouse
+             on-key on-release
+             on-mouseclick on-mousemove
              on-receive receive-channel send-channel]}]
   (let [history-builder (if record? conj (constantly nil))
         limit-reached? (if frame-limit #(> % frame-limit) (constantly false))
         stop-when? (or stop-when? (constantly false))
-        ticker (interval-ticker (or tick-rate 17)) ; 17ms = approx 58.82 FPS
+        ticker (if on-tick
+                 (interval-ticker (or tick-rate 17)) ; 17ms = approx 58.82 FPS
+                 (no-op))
         keydown-handler (if on-key
-                          (add-event-listener (.-body js/document) :keydown)
+                          (add-event-listener
+                            (.-body js/document)
+                            :event-type :keydown
+                            :prevent-default? false)
                           (no-op))
-        mouse-handler (if on-mouse
-                          (add-event-listener (.-body js/document) :click)
-                          (no-op))]
+        mouseclick-handler (if on-mouseclick
+                             (add-event-listener
+                               (.-body js/document)
+                               :event-type :click)
+                             (no-op))
+        mousemove-handler (if on-mousemove
+                             (add-event-listener
+                               (.-body js/document)
+                               :event-type :mousemove)
+                             (no-op))]
     (go
       (loop [world-state initial-state
              history     []
              frame       0]
         (let [handler-result (alt!
-                               (data-channel keydown-handler) ([event ch] (on-key event world-state))
-                               (data-channel mouse-handler)   ([event ch] (on-mouse event world-state))
-                               (data-channel ticker)          ([value ch] (on-tick world-state)))
+                               (data-channel keydown-handler)    ([event ch] (on-key event world-state))
+                               (data-channel mouseclick-handler) ([event ch] (on-mouseclick event world-state))
+                               (data-channel mousemove-handler)  ([event ch] (on-mousemove event world-state))
+                               (data-channel ticker)             ([value ch] (on-tick world-state)))
               next-world-state (extract-world-state handler-result)
               message (extract-message handler-result)]
           (send-message send-channel message)
