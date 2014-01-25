@@ -57,11 +57,13 @@ For maven-based projects, add the following to your `pom.xml`:
   <version>0.0.1-SNAPSHOT</version>
 </dependency>
 ```
-## Basic Usage - a simple example
+## Basic Usage
+
+### A simple example
 
 The following code sample gives a simple high level overview of how to program
 a big-bang world. See http://programming-enchiladas.destructuring-bind.org/rm-hull/8623502
-for a running demo:
+for a running demo of this code:
 
 ```clojure
 (ns big-bang.example.cat-animation
@@ -105,24 +107,30 @@ the image.
 
 The big-bang internal ticker is initialized to tick every 17ms (~60FPS) by default,
 and call ```update-state``` defined at [1]. This function takes the world-state
-(here the co-ordinates are destructured), and updates the X component only.
+(here the co-ordinates are destructured), and returnd a new world-state comprising
+an updated X component along with the unmodified Y value.
 
-On world-state being changed, the on-draw ```render-scene``` function is scheduled
+On world-state being changed, the to-draw ```render-scene``` function is scheduled
 to run inside a _requestAnimationFrame()_ callback. Internally the world-state is
 advanced in a recursive call, ready to dispatch on the next incoming event: this is
-but an implementation detail that needn't be dwelt on.
+but an implementation detail that needn't be dwelt on, however.
+
+### Architectural Considerations
 
 The ```:on-tick``` timer is just one type of event that big-bang listens on; it is
-straightforward to add futher event sources to handle browser events (key presses,
-mouse movement, etc) as well as externally defined core.async channels.
+straightforward to add futher event sources to handle targetted browser events
+(e.g. key presses, mouse movement, etc. on specified DOM components) as well as
+externally defined core.async channels. Interfacing with native javascript libraries
+that emit events is also possible with relatively little effort.
 
-A big-bang handler can control a single component, however complex its internal
-representation, or can be used as a smaller component in an orchestrated multiverse,
-communicating with other big-bangs over channels in the CSP style.
+A big-bang handler can control a single or multiple DOM components, however complex
+its internal representation.  Likewise it can be used as a smaller component in an
+orchestrated multiverse, communicating with other big-bangs over channels in the CSP
+style.
 
-*So what is a Big-bang?* A big bang is something that started out of nothing and
+**So what is a Big-bang?** A big bang is something that started out of nothing and
 continues to tick until the end of time (unless you implement a ```:stop-when?```
-handler or specify a maximum lifespan with the ```:max-frames``` option), at which
+handler or specify a maximum lifespan with the ```:max-frames``` option, at which
 point the world-state will cease and there will be no further rendering).
 
 ### Event Handling and ```IChannelSource```
