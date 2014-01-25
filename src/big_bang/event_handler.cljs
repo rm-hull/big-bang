@@ -5,26 +5,6 @@
   (:require-macros
     [cljs.core.async.macros :refer [go]]))
 
-(defn add-event-listener
-  "Binds an event-type listener to the element. The event-type may be specified
-   as a string or keyword, but can match the published onkey.../onmouse.../etc
-   or custom events posted to components.
-
-   Returns a reified IChannelSource which exposes the delivery channel on to
-   events are posted, and a mechanism to shutdown and de-install the event
-   listener."
-  [element event-type]
-  (let [ch (chan)
-        handler (fn [event] (go (>! ch event)))]
-    (.addEventListener element (name event-type) handler)
-    (reify
-      big-bang.protocol/IChannelSource
-      (data-channel [this] ch)
-
-      (shutdown! [this]
-        (close! ch)
-        (.removeEventListener element handler)))))
-
 (defn prevent-default
   "If an event is cancelable, this function is used to signify that the event
    is to be cancelled, meaning any default action normally taken by the
@@ -52,6 +32,30 @@
 
 (defn which [event]
   (.-which event))
+
+(defn add-event-listener
+  "Binds an event-type listener to the element. The event-type may be specified
+   as a string or keyword, but can match the published onkey.../onmouse.../etc
+   or custom events posted to components.
+
+   Returns a reified IChannelSource which exposes the delivery channel on to
+   which events are posted, and a mechanism to shutdown and de-install the
+   event listener."
+  [element & {:keys [event-type prevent-default?] :as opts}]
+  (let [ch (chan)
+        handler (fn [event]
+                  (when prevent-default?
+                    (prevent-default event))
+                  (go (>! ch event)))]
+    (.addEventListener element (name event-type) handler)
+    (reify
+      big-bang.protocol/IChannelSource
+      (data-channel [this] ch)
+
+      (shutdown! [this]
+        (close! ch)
+        (.removeEventListener element handler)))))
+
 
 
 
