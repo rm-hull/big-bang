@@ -8,7 +8,7 @@ in a pure functional manner; of course, inevitably, at some point you have to
 punch outside and twiddle some IO or paint some pixels.
 
 See http://rm-hull.github.io/big-bang/example.html for some in-progress demos,
-and a for a face-off<sup>*</sup> comparison between Big-Bang and [OM][c] here:
+and for a face-off<sup>*</sup> comparison between Big-Bang and [OM][c] here:
 
 [Om mouse move][d] vs. [Big Bang mouse move][e]
 
