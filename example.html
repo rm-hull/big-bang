@@ -14,7 +14,7 @@
               <a id="forkme_banner" href="https://github.com/rm-hull/big-bang">View on GitHub</a>
 
               <h1 id="project_title">Big-bang</h1>
-              <h2 id="project_tagline">A simple example of a ClojureScript game loop, loosely based on Racket&#39;s big-bang and implemented on top of core.async</h2>
+              <h2 id="project_tagline">A sample implementation of a ClojureScript game loop, loosely based on Racket&#39;s big-bang and implemented on top of core.async</h2>
             </header>
         </div>
 
@@ -22,11 +22,10 @@
         <div id="main_content_wrap" class="outer">
           <section id="main_content" class="inner">
               <div>
-                <p>See: <a href="https://github.com/rm-hull/big-bang/blob/master/examples/cat/cat.cljs">https://github.com/rm-hull/big-bang/blob/master/examples/cat/cat.cljs</a></p>
-                <canvas id="cat-canvas" width="800" height="220"></canvas>
-              </div>
-              <div>
-                <p>See: <a href="https://github.com/rm-hull/big-bang/blob/master/examples/pacman/">https://github.com/rm-hull/big-bang/blob/master/examples/pacman</a></p>
+                  <p>On-going development of a Pac-man game, implemented in 
+                  ClojureScript using big-bang to 'kick the tyres'. Use
+                  the arrow keys to control Pakkuman.</p>
+                  <p>See: <a href="https://github.com/rm-hull/big-bang/blob/master/examples/pacman/">https://github.com/rm-hull/big-bang/blob/master/examples/pacman</a></p>
                 <div style="padding: 20px; background-color: black; color: white">
                   <canvas id="pacman-canvas" width="400" height="400"></canvas>
                 </div>
@@ -35,7 +34,6 @@
         </div>
           <script type="text/javascript" src="http://rm-hull.github.io/big-bang/target/example.js"></script>
           <script type="text/javascript">
-            big_bang.examples.cat.demo();
             big_bang.examples.pacman.main.start_game();
           </script>
     </body>
