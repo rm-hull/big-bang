@@ -5,14 +5,13 @@ Racket's [big-bang][a] and implemented on top of [core.async][b]. It is a pure
 ClojureScript implementation with no external Javascript dependencies. Using
 _Big-Bang_ encourages you to implement what would be otherwise stateful code
 in a pure functional manner; of course, inevitably, at some point you have to
-punch outside and twiddle some IO or paint some pixels.
+punch outside and twiddle some IO or paint some pixels - this can be entirely
+encapsulated in the render handler however.
 
 See http://rm-hull.github.io/big-bang/example.html for some in-progress demos,
-and for a face-off<sup>*</sup> comparison between Big-Bang and [OM][c] here:
+and for a code comparison between Big-Bang and [OM][c], see here:
 
-[Om mouse move][d] vs. [Big Bang mouse move][e]
-
-<sup>*</sup> - tongue-in-cheek, of course. ツ
+[Om mouse move][d] vs. [Big Bang mouse move][e] ツ
 
 [a]: http://docs.racket-lang.org/teachpack/2htdpuniverse.html#(form._world._((lib._2htdp/universe..rkt)._big-bang))
 [b]: http://github.com/clojure/core-async
@@ -58,7 +57,73 @@ For maven-based projects, add the following to your `pom.xml`:
   <version>0.0.1-SNAPSHOT</version>
 </dependency>
 ```
-## Basic Usage
+## Basic Usage - a simple example
+
+The following code sample gives a simple high level overview of how to program
+a big-bang world. See http://programming-enchiladas.destructuring-bind.org/rm-hull/8623502
+for a running demo:
+
+```clojure
+(ns big-bang.example.cat-animation
+  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require [enchilada :refer [canvas ctx canvas-size proxy-request]]
+            [cljs.core.async :as async :refer [<!]]
+            [dataview.loader :refer [fetch-image]]
+            [big-bang.core :refer [big-bang!]]
+            [jayq.core :refer [show]]))
+
+(def width (get (canvas-size) 0))
+(def height (get (canvas-size) 1))
+
+(defn increment-and-wrap [x limit]
+  (if (< x limit)
+    (inc x)
+    0))
+
+(defn update-state [[x y]]                              ; [1]
+  [(increment-and-wrap x width) y])
+
+(defn render-scene [ctx img [x y]]                      ; [2]
+  (.clearRect ctx 0 0 width height)
+  (.drawImage ctx img x y))
+
+(show canvas)
+
+(go
+  (let [cat "https://gist.github.com/rm-hull/8859515c9dce89935ac2/raw/cat_08.jpg"
+        img (<! (fetch-image (proxy-request cat)))]     ; [3]
+    (big-bang!                                          ; [4]
+      :initial-state [0 0]
+      :on-tick update-state
+      :to-draw (partial render-scene ctx img))))
+```
+
+At step [3], an image is fetched asynchronously bound to a local context
+inside the ```go``` block - then big-bang is invoked at [4] with an initial world-state
+of ```[0 0]``` - the co-ordinates of the canvas onto which we will render
+the image.
+
+The big-bang internal ticker is initialized to tick every 17ms (~60FPS) by default,
+and call ```update-state``` defined at [1]. This function takes the world-state
+(here the co-ordinates are destructured), and updates the X component only.
+
+On world-state being changed, the on-draw ```render-scene``` function is scheduled
+to run inside a _requestAnimationFrame()_ callback. Internally the world-state is
+advanced in a recursive call, ready to dispatch on the next incoming event: this is
+but an implementation detail that needn't be dwelt on.
+
+The ```:on-tick``` timer is just one type of event that big-bang listens on; it is
+straightforward to add futher event sources to handle browser events (key presses,
+mouse movement, etc) as well as externally defined core.async channels.
+
+A big-bang handler can control a single component, however complex its internal
+representation, or can be used as a smaller component in an orchestrated multiverse,
+communicating with other big-bangs over channels in the CSP style.
+
+*So what is a Big-bang?* A big bang is something that started out of nothing and
+continues to tick until the end of time (unless you implement a ```:stop-when?```
+handler or specify a maximum lifespan with the ```:max-frames``` option), at which
+point the world-state will cease and there will be no further rendering).
 
 ### Event Handling and ```IChannelSource```
 
@@ -122,19 +187,15 @@ game loop.
 
 ## Differences from the Racket implementation
 
+This library is written in the _spirit_ of Racket's big-bang - it is not intended
+as a like-for-like copy, nor I have not poured over the implementation details of
+big-bang. Inevitably, therefore, there will be differences between the two, which
+I will attempt to document here:
+
+
 ## TODO
 
-* ~~Variable ```:on-tick``` rate & re-org. recur/loop with animation-frame~~
-* Implement ```:target-id``` element for event handlers to attach to (default to _document_)
-* Implement ```:on-key``` and ```:on-release``` (maps to _keydown_ and _keyup_ events respectively)
-* implement ```:on-mouse```, add a ```(mouse-handler ...)``` like Racket's ```(pad-handler ...)```
-* Implement ```:on-touch``` with ```(touch-handler ...)```
-* Deregister event listeners on stop
-* ~~Return list of states on stop if ```:record?``` is true, else ```nil```~~
-* Playback states functionality via ```:playback```
-* External messages via ```:on-receive``` with ```:receive-channel``` & ```:send-channel```
-* ~~```(make-package w m)```, ```(package? x)```, extraction functions~~
-* Tests, documentation, examples
+Migrated the TODO list to github issues: http://github.com/rm-hull/big-bang/issues
 
 ## Known Bugs
 
