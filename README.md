@@ -74,7 +74,7 @@ the event listener.
 (go
   (loop []
     (when-let [e (<! (data-channel listener))]
-      (.log js/console (str "Received: " x))
+      (.log js/console (str "Received: " e))
       (recur)))))
 
 (go
