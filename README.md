@@ -8,7 +8,9 @@ in a pure functional manner; of course, inevitably, at some point you have to
 punch outside and twiddle some IO or paint some pixels - this can be entirely
 encapsulated in the render handler however.
 
-See http://rm-hull.github.io/big-bang/example.html for some in-progress demos,
+See http://rm-hull.github.io/big-bang/example.html and
+http://programming-enchiladas.destructuring-bind.org/rm-hull/8623502
+for some in-progress demos,
 and for a code comparison between Big-Bang and [OM][c], see here:
 
 [Om mouse move][d] vs. [Big Bang mouse move][e] ツ
