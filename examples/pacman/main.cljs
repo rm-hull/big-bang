@@ -2,7 +2,7 @@
   (:require
     [cljs.core.async :refer [<!] :as async]
     [big-bang.core :refer [big-bang!]]
-    [big-bang.event-handler :refer [which prevent-default]]
+    [big-bang.events.browser :refer [which]]
     [big-bang.examples.pacman.config :refer [width height cell-size] :as config]
     [big-bang.examples.pacman.render :refer [make-render-frame]]
     [big-bang.examples.pacman.level-builder :refer [get-background]])
@@ -65,19 +65,22 @@
   (let [[maxx maxy] (map dec config/background-size)]
     (fn [[x y]]
       [(cond
-      (< x 0)    maxx
-      (> x maxx) 0
-      :else      x)
+      (< x 0)     (dec maxx)
+      (>= x (dec maxx)) 0
+      :else       x)
      (cond
-      (< y 0)    maxy
-      (> y maxx) 0
-      :else      y)])))
+      (< y 0)     maxy
+      (> y maxx)  0
+      :else       y)])))
 
 (defn advance-pacman [world-state]
   (let [next-pos (-> world-state calc-next-position screen-wrap)
         new-cell (level-item world-state next-pos)]
     (condp = new-cell
       " " (->
+            world-state
+            (update-position next-pos))
+      "\n" (->
             world-state
             (update-position next-pos))
       "." (->
@@ -97,7 +100,7 @@
       ; else do nothing: i.e. dont allow to drill through walls
             world-state)))
 
-(defn update-state [world-state]
+(defn update-state [event world-state]
   (->
     world-state
     (update-in [:frame] inc)
@@ -132,8 +135,20 @@
 
 (defn change-direction [event world-state]
   (if-let [dir (directions (which event))]
-    (assoc world-state :direction dir)
+    (let [next-pos (->
+                     world-state
+                     (assoc :direction dir)
+                     calc-next-position
+                     screen-wrap)
+          new-cell (level-item world-state next-pos)]
+      (condp = new-cell
+        " " (assoc world-state :direction dir)
+        "." (assoc world-state :direction dir)
+        "O" (assoc world-state :direction dir)
+        "\n" (assoc world-state :direction dir)
+            world-state))
     world-state))
+
 
 (defn start-game []
   (go
@@ -147,5 +162,5 @@
       (big-bang!
         :initial-state (make-initial-state n (<! (config/level n)))
         :on-tick update-state
-        :on-key change-direction
+        :on-keydown change-direction
         :to-draw render-frame))))
