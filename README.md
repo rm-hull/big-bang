@@ -17,7 +17,7 @@ and for a code comparison between Big-Bang and [OM][c], see here:
 
 [a]: http://docs.racket-lang.org/teachpack/2htdpuniverse.html#(form._world._((lib._2htdp/universe..rkt)._big-bang))
 [b]: http://github.com/clojure/core-async
-[c]: https://github.com/swannodette/om)
+[c]: https://github.com/swannodette/om
 [d]: http://programming-enchiladas.destructuring-bind.org/rm-hull/8617445
 [e]: http://programming-enchiladas.destructuring-bind.org/rm-hull/8617788
 
