@@ -20,18 +20,18 @@
   (when (and chan msg)
     (go (>! chan msg))))
 
-(defn make-event-source [event-target event-type event-handler]
-  (if event-handler
+(defn make-event-source [handler event-target event-type]
+  (if handler
     (add-event-listener event-target :event-type (keyword event-type))
     (no-op)))
 
-(defn make-receive-source [receive-handler receive-channel]
-  (if (and receive-handler receive-channel)
+(defn make-receive-source [handler receive-channel]
+  (if (and handler receive-channel)
     (wrap-channel receive-channel)
     (no-op)))
 
-(defn make-timer-source [timer-handler & [interval-millis]]
-  (if timer-handler
+(defn make-timer-source [handler & [interval-millis]]
+  (if handler
     (interval-ticker (or interval-millis 17)) ; = approx 58.82 FPS
     (no-op)))
 
@@ -46,7 +46,7 @@
       (for [[k v] opts
             :let  [[_ event-type] (re-matches #"on-(.*)" (name k))]
             :when (and event-type (nil? (reserved-handler-names k)))]
-        {:event-name event-type :event-source (make-event-source event-target event-type v) :handler v}))))
+        {:event-name event-type :event-source (make-event-source v event-target event-type) :handler v}))))
 
 (defn shutdown-all [handlers]
   (doseq [handler handlers]
