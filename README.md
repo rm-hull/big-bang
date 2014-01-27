@@ -76,11 +76,12 @@ the events are bound to _document.body_. If you find yourself wanting to bind to
 multiple events from different targets within a single big-bang world, this is a
 clear sign that you should be using multiple (smaller) big-bang components instead.
 
-**NOTE:*** There are two reserved event handlers:
+**NOTE:** There are two reserved event handlers:
 
 * ```:on-tick``` which if present, invokes an interval timer every 17ms,
-  or whatever rate is defined by ```:tick-rate```. If not defined, then
-  no timer event source will be installed,
+  (i.e. an effective frame rate of approx 60 frames/sec) or whatever rate
+  is defined by ```:tick-rate```. If not defined, then no timer event
+  source will be installed,
 
 * ```:on-receive``` which is a handler that is invoked
   when external messages are received (on the ```:receive-channel```).
@@ -94,19 +95,21 @@ It is _part of the expected contract between big-bang and the event handlers_ th
 
 * The handler function accepts an event and world-state as arguments, and that
   a modified world-state is returned. The world state can be packaged to
-  include a message which will be sent on the ```:send-channel``` - just
+  include a message which will be emitted on the ```:send-channel``` - just
   return ```(make-package modified-world-state message)``` instead.
 
 * To take advantage of structural sharing, rather than creating new states,
   you are encouraged to use ```assoc```, ```assoc-in```, ```merge``` or
-  ```update-in``` to modify the world state. The threading macros (```->```
-  and ```->>```) are particularly useful constructs for making clear intent.
+  ```update-in``` to modify the existing world state. The threading macros
+  (```->``` and ```->>```) are particularly useful constructs for making this
+  intent clear.
 
-* The handler function is idempotent and is free from side effects: the event
-  and the incoming world-state are the only things that will effect the returned
-  world-state.
+* The handler function _should_ generally be idempotent and free from side effects:
+  the event and the incoming world-state are the only things that will effect the
+  returned world-state.
 
-The new world-state is compared to the old world-state (pending issue #5), and if
+The new world-state is compared to the old world-state (pending issue
+[#5](https://github.com/rm-hull/big-bang/issues/5)), and if
 there is a difference, then the ```:to-draw``` renderer is invoked. The renderer
 handler accepts a single argument: the world-state. It should completely render
 the component to the DOM according to the supplied world-state, whether this is
