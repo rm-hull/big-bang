@@ -61,6 +61,63 @@ For maven-based projects, add the following to your `pom.xml`:
 ```
 ## Basic Usage
 
+Big bang takes a number of keyword arguments in its call, most of which are optional;
+only ```:initial-state``` and ```:to-draw``` are required.
+
+The ```:initial-state``` value should be a persistent data-structure which typically
+means using a map or vector. It should be the basis of the starting state for the component.
+
+Event handlers can be attached by adding a key starting with ```:on-...``` (for
+example ```:on-keydown```, ```:on-click```) and a value of a function handler
+reference: the function should take two arguments: an event and a world-state,
+and return a (possibly modified) world state. The event naming follows typical
+javascript event types, and unless a DOM element is specified in ```:event-target```,
+the events are bound to _document.body_. If you find yourself wanting to bind to
+multiple events from different targets within a single big-bang world, this is a
+clear sign that you should be using multiple (smaller) big-bang components instead.
+
+**NOTE:*** There are two reserved event handlers:
+
+* ```:on-tick``` which if present, invokes an interval timer every 17ms,
+  or whatever rate is defined by ```:tick-rate```. If not defined, then
+  no timer event source will be installed,
+
+* ```:on-receive``` which is a handler that is invoked
+  when external messages are received (on the ```:receive-channel```).
+
+On start-up, all the event sources are assembled and any initialization occurs.
+Inside a go loop, the associated channels (/ports) are passed to a _core.async_
+alts! method. The resulting value ('the received event') is then dispatched to
+the relevant handler function along with the world-state.
+
+It is _part of the expected contract between big-bang and the event handlers_ that:
+
+* The handler function accepts an event and world-state as arguments, and that
+  a modified world-state is returned. The world state can be packaged to
+  include a message which will be sent on the ```:send-channel``` - just
+  return ```(make-package modified-world-state message)``` instead.
+
+* To take advantage of structural sharing, rather than creating new states,
+  you are encouraged to use ```assoc```, ```assoc-in```, ```merge``` or
+  ```update-in``` to modify the world state. The threading macros (```->```
+  and ```->>```) are particularly useful constructs for making clear intent.
+
+* The handler function is idempotent and is free from side effects: the event
+  and the incoming world-state are the only things that will effect the returned
+  world-state.
+
+The new world-state is compared to the old world-state (pending issue #5), and if
+there is a difference, then the ```:to-draw``` renderer is invoked. The renderer
+handler accepts a single argument: the world-state. It should completely render
+the component to the DOM according to the supplied world-state, whether this is
+canvas operations or via some DOM manipulation library such as
+[Dommy](https://github.com/Prismatic/dommy).
+
+Big-bang can be terminated by supplying a ```:stop-when?``` handler (accepting a
+single argument of the world-state, returning true will cease the event loop), or
+after a fixed number of frames specified by the ```:max-frames``` value. By default,
+it will run indefinitely however.
+
 ### A simple example
 
 The following code sample gives a simple high level overview of how to program
@@ -74,30 +131,30 @@ for a running demo of this code:
             [cljs.core.async :as async :refer [<!]]
             [dataview.loader :refer [fetch-image]]
             [big-bang.core :refer [big-bang!]]
-            [jayq.core :refer [show]]))
+            [jayq.core :refer [show attr]]))
 
-(def width (get (canvas-size) 0))
-(def height (get (canvas-size) 1))
-
-(defn increment-and-wrap [x limit]
-  (if (< x limit)
+(defn increment-and-wrap [x]
+  (if (< x 800)
     (inc x)
     0))
 
-(defn update-state [[x y]]                              ; [1]
-  [(increment-and-wrap x width) y])
+(defn update-state [event world-state]                      ; [1]
+  (update-in world-state [:x] increment-and-wrap))
 
-(defn render-scene [ctx img [x y]]                      ; [2]
-  (.clearRect ctx 0 0 width height)
+(defn render-scene [ctx img {:keys [x y] :as world-state}]  ; [2]
+  (.clearRect ctx 0 0 800 220)
   (.drawImage ctx img x y))
-
-(show canvas)
 
 (go
   (let [cat "https://gist.github.com/rm-hull/8859515c9dce89935ac2/raw/cat_08.jpg"
-        img (<! (fetch-image (proxy-request cat)))]     ; [3]
-    (big-bang!                                          ; [4]
-      :initial-state [0 0]
+        img (<! (fetch-image (proxy-request cat)))]         ; [3]
+
+    (attr canvas "width" 800)
+    (attr canvas "height" 220)
+    (show canvas)
+
+    (big-bang!                                              ; [4]
+      :initial-state {:x 0 :y 0}
       :on-tick update-state
       :to-draw (partial render-scene ctx img))))
 ```
@@ -108,32 +165,14 @@ of ```[0 0]``` - the co-ordinates of the canvas onto which we will render
 the image.
 
 The big-bang internal ticker is initialized to tick every 17ms (~60FPS) by default,
-and call ```update-state``` defined at [1]. This function takes the world-state
-(here the co-ordinates are destructured), and returnd a new world-state comprising
-an updated X component along with the unmodified Y value.
+and call ```update-state``` defined at [1]. This function takes the event (unused)
+and a world-state, and returnd a new world-state comprising an updated X component
+along with the unmodified Y value.
 
-On world-state being changed, the to-draw ```render-scene``` function is scheduled
+On world-state being changed, the to-draw ```render-scene``` function at [2] is scheduled
 to run inside a _requestAnimationFrame()_ callback. Internally the world-state is
 advanced in a recursive call, ready to dispatch on the next incoming event: this is
 but an implementation detail that needn't be dwelt on, however.
-
-### Architectural Considerations
-
-The ```:on-tick``` timer is just one type of event that big-bang listens on; it is
-straightforward to add futher event sources to handle targetted browser events
-(e.g. key presses, mouse movement, etc. on specified DOM components) as well as
-externally defined core.async channels. Interfacing with native javascript libraries
-that emit events is also possible with relatively little effort.
-
-A big-bang handler can control a single or multiple DOM components, however complex
-its internal representation.  Likewise it can be used as a smaller component in an
-orchestrated multiverse, communicating with other big-bangs over channels in the CSP
-style.
-
-**So what is a Big-bang?** A big bang is something that started out of nothing and
-continues to tick until the end of time (unless you implement a ```:stop-when?```
-handler or specify a maximum lifespan with the ```:max-frames``` option, at which
-point the world-state will cease and there will be no further rendering).
 
 ### Event Handling and ```IChannelSource```
 
