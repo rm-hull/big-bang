@@ -1,7 +1,7 @@
 (ns big-bang.examples.pacman.level-builder
   (:require [cljs.core.async :refer [chan <! map<] :as async]
             [clojure.string :refer [split-lines]]
-            [dataview.ops :refer [eod? read-delimited-string create-reader]]
+            [dataview.ops :refer [eod? create-reader]]
             [big-bang.examples.pacman.config :as config]
             [big-bang.examples.pacman.util :refer [posn into-channel]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
