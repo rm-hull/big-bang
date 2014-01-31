@@ -26,4 +26,5 @@
 (defn extract-message
   "Extracts the message from x if it is a package, else returns nil"
   [x]
-  (:message x))
+  (when (package? x)
+    (:message x)))

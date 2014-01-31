@@ -35,6 +35,11 @@
     (interval-ticker (or interval-millis 17)) ; = approx 58.82 FPS
     (no-op)))
 
+(defn- as-list [element-or-coll]
+  (if (or (seq? element-or-coll) (array? element-or-coll))
+    element-or-coll
+    (list element-or-coll)))
+
 (defn build-event-sources [{:keys [event-target
                                    on-tick tick-rate
                                    on-receive receive-channel] :as opts}]
@@ -45,8 +50,9 @@
        {:event-name "receive" :event-source (make-receive-source on-receive receive-channel) :handler on-receive}]
       (for [[k v] opts
             :let  [[_ event-type] (re-matches #"on-(.*)" (name k))]
-            :when (and event-type (nil? (reserved-handler-names k)))]
-        {:event-name event-type :event-source (make-event-source v event-target event-type) :handler v}))))
+            :when (and event-type (nil? (reserved-handler-names k)))
+            target (as-list event-target)]
+        {:event-name event-type :event-source (make-event-source v target event-type) :handler v}))))
 
 (defn shutdown-all [handlers]
   (doseq [handler handlers]
@@ -90,7 +96,10 @@
 
             ; keep on truckin'
             (do
-              (animation-frame (fn [] (to-draw world-state))) ; TODO: only draw if world-state != next-world-state
+              (when (not= world-state next-world-state)
+                (animation-frame
+                  (fn [] (to-draw next-world-state))))
+
               (recur
                 next-world-state
                 (history-builder history next-world-state)

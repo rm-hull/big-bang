@@ -27,3 +27,6 @@
 
 (defn which [event]
   (.-which event))
+
+(defn target [event]
+  (.-target event))
