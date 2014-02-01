@@ -258,6 +258,7 @@ Migrated the TODO list to github issues: http://github.com/rm-hull/big-bang/issu
 
 * http://docs.racket-lang.org/teachpack/2htdpuniverse.html#(form._world._((lib._2htdp/universe..rkt)._big-bang))
 * http://worrydream.com/Tangle/
+* https://github.com/oakes/play-clj
 
 ## License
 
