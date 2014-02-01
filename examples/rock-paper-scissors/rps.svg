@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphi c s/SVG/1.1/DTD/svg11.dtd">
+<!-- Attribution: modified from: https://upload.wikimedia.org/wikipedia/commons/6/67/Rock-paper-scissors.svg-->
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="460px" height="440px" viewBox="80 30 440 440" xml:space="preserve">
     <g style="fill:#000000; stroke:#000000; stroke-width:3;">
         <path style="fill:none;" d="M 205.041,366.998 c -44.333 -31.121 -74.01 -81.703 -76.621 -139.339"/>
