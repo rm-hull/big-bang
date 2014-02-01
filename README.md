@@ -9,8 +9,9 @@ punch outside and twiddle some IO or paint some pixels - this can be entirely
 encapsulated in the render handler however.
 
 See [Pacman](http://rm-hull.github.io/big-bang/example.html) (work-in-progress), a
-[simple animation](http://programming-enchiladas.destructuring-bind.org/rm-hull/8623502)
-and [Rock Paper Scissors](http://programming-enchiladas.destructuring-bind.org/rm-hull/8723389)
+[simple animation](http://programming-enchiladas.destructuring-bind.org/rm-hull/8623502), a
+[tumbling 3D torus](http://programming-enchiladas.destructuring-bind.org/rm-hull/7098992) and
+[Rock Paper Scissors](http://programming-enchiladas.destructuring-bind.org/rm-hull/8723389)
 for demos, and for a code comparison between Big-Bang and [OM][c], see here:
 
 [Om mouse move][d] vs. [Big Bang mouse move][e] ツ
