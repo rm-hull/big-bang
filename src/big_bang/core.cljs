@@ -64,7 +64,7 @@
       #(vector (data-channel (:event-source %)) %)
       event-sources)))
 
-(defn big-bang!
+(defn big-bang
   "Loosely based on Racket's big-bang, but executes in a go-block."
   [& {:keys [initial-state stop-when? max-frames to-draw
              record? playback
@@ -76,6 +76,11 @@
         stop-when? (or stop-when? (constantly false))
         dispatch-table (build-dispatch-table (build-event-sources opts))
         ports (keys dispatch-table)]
+
+    ; Draw initial state
+    (when to-draw
+      (animation-frame
+        (fn [] (to-draw initial-state))))
 
     (go
       (loop [world-state initial-state
@@ -96,7 +101,8 @@
 
             ; keep on truckin'
             (do
-              (when (not= world-state next-world-state)
+              ; Only render IFF there is a to-draw function and the world state changed
+              (when (and to-draw (not= world-state next-world-state))
                 (animation-frame
                   (fn [] (to-draw next-world-state))))
 
@@ -104,3 +110,6 @@
                 next-world-state
                 (history-builder history next-world-state)
                 (inc frame)))))))))
+
+; deprecated:
+(def big-bang! big-bang)
