@@ -84,7 +84,7 @@
                           :id :k
                           :label-text "k:"
                           :label "k:"
-                          :min-value 0
+                          :min-value 0.05
                           :max-value 10
                           :step 0.05
                           :initial-value initial-k
