@@ -9,7 +9,8 @@
                  [org.clojure/core.async "0.1.267.0-0d7780-alpha"]
                  [rm-hull/cljs-dataview "0.0.1-SNAPSHOT"]
                  [rm-hull/cljs-test "0.0.7"]
-                 [rm-hull/dommy "0.1.3-SNAPSHOT"]]
+                 [rm-hull/dommy "0.1.3-SNAPSHOT"]
+                 [rm-hull/monet "0.1.10"]]
   :plugins [[lein-cljsbuild "1.0.1"]]
   :source-paths ["src"]
   :cljsbuild {
