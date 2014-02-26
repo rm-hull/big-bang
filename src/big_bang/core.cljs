@@ -75,7 +75,7 @@
         limit-reached? (if max-frames #(> % max-frames) (constantly false))
         stop-when? (or stop-when? (constantly false))
         dispatch-table (build-dispatch-table (build-event-sources opts))
-        ports (keys dispatch-table)]
+        ports (vec (keys dispatch-table))]
 
     ; Draw initial state
     (when to-draw
