@@ -82,8 +82,10 @@
         element (node
                   [:input {:id id-str
                            :name id-str
-                           :type "color"
-                           :value initial-value}])]
+                           :type "color" }])]
+
+    (set! (.-value element) initial-value)
+
     (big-bang
       :initial-state {id initial-value}
       :send-channel send-channel
