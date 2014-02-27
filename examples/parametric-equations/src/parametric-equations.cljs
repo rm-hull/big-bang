@@ -7,7 +7,7 @@
     [monet.canvas :refer [fill-style fill-rect circle rotate translate composition-operation save restore]]
     [big-bang.core :refer [big-bang]]
     [big-bang.package :refer [make-package]]
-    [big-bang.examples.parametric-equations.slider :refer [make-slider]])
+    [big-bang.components :refer [slider]])
   (:require-macros
     [cljs.core.async.macros :refer [go]]
     [dommy.macros :refer [sel1 sel node]]))
@@ -72,7 +72,7 @@
      (sel1 :#canvas-area)
      (insert-after! (node
                      [:div
-                        (make-slider
+                        (slider
                           :id :persistence
                           :label-text "Persistence:"
                           :min-value 0
