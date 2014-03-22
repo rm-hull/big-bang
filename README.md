@@ -110,8 +110,7 @@ It is _part of the expected contract between big-bang and the event handlers_ th
   the event and the incoming world-state are the only things that will effect the
   returned world-state.
 
-The new world-state is compared to the old world-state (pending issue
-[#5](https://github.com/rm-hull/big-bang/issues/5)), and if
+The new world-state is compared to the old world-state, and if
 there is a difference, then the ```:to-draw``` renderer is invoked. The renderer
 handler accepts a single argument: the world-state. It should completely render
 the component to the DOM according to the supplied world-state, whether this is
