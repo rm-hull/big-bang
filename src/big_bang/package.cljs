@@ -5,7 +5,7 @@
    consist of both a world-state and a message."
   [x]
   (and
-   (contains? x :message)
+   (contains? (meta x) :message)
    (contains? x :world-state)))
 
 (defn make-package
@@ -14,7 +14,7 @@
    the next world-state and the message field specifies what the world places
    on any defined send-channel."
   [world-state message]
-  {:world-state world-state :message message})
+  ^{:message message}{:world-state world-state})
 
 (defn extract-world-state
   "Extracts the world-state from x if it is a package, else returns x"
@@ -27,4 +27,4 @@
   "Extracts the message from x if it is a package, else returns nil"
   [x]
   (when (package? x)
-    (:message x)))
+    (:message (meta x))))
