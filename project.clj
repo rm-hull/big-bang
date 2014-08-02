@@ -5,12 +5,12 @@
   :license {:name "The MIT License (MIT)"
             :url "http://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2202"]
-                 [org.clojure/core.async "0.1.278.0-76b25b-alpha"]
+                 [org.clojure/clojurescript "0.0-2280"]
+                 [org.clojure/core.async "0.1.303.0-886421-alpha"]
                  [rm-hull/cljs-dataview "0.0.1-SNAPSHOT"]
                  [rm-hull/cljs-test "0.0.8-SNAPSHOT"]
                  [rm-hull/dommy "0.1.3-SNAPSHOT"]
-                 [rm-hull/monet "0.1.10"]]
+                 [rm-hull/monet "0.1.12"]]
   :plugins [[lein-cljsbuild "1.0.3"]]
   :source-paths ["src"]
   :cljsbuild {
