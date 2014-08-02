@@ -13,6 +13,13 @@
   [event]
   (.stopPropagation event))
 
+
+(defn offset-coords
+  "(x,y) co-ordinates at which the event occurred relative to the
+   target element."
+  [event]
+  [(.-offsetX event) (.-offsetY event)])
+
 (defn client-coords
   "(x,y) co-ordinates at which the event occurred relative to the
    DOM implementation's client area."
@@ -30,3 +37,11 @@
 
 (defn target [event]
   (.-target event))
+
+(defn button
+  "For mouse up/down events, returns:
+     0: left button,
+     1: middle button,
+     2: right button."
+  [event]
+  (.-button event))
