@@ -13,12 +13,13 @@
   [event]
   (.stopPropagation event))
 
-
 (defn offset-coords
   "(x,y) co-ordinates at which the event occurred relative to the
    target element."
   [event]
-  [(.-offsetX event) (.-offsetY event)])
+  ; http://stackoverflow.com/a/14872192/260541
+  [(or (.-offsetX event) (+  (- (.-pageX event) (.-offsetLeft (.-target event))) (.-pageXOffset js/window)) 0)
+   (or (.-offsetY event) (+  (- (.-pageY event) (.-offsetTop (.-target event))) (.-pageYOffset js/window)) 0)])
 
 (defn client-coords
   "(x,y) co-ordinates at which the event occurred relative to the
