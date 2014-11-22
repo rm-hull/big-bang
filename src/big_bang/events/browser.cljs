@@ -33,6 +33,10 @@
   [event]
   [(.-x event) (.-y event)])
 
+(defn touch-coords [event]
+  (when-let [touch-object (.-changedTouches event)]
+    (client-coords (aget touch-object 0))))
+
 (defn which [event]
   (.-which event))
 
