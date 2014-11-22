@@ -22,7 +22,7 @@
 
 (defn make-event-source [handler event-target event-type]
   (if handler
-    (add-event-listener event-target :event-type (keyword event-type))
+    (add-event-listener event-target :event-type (keyword event-type :prevent-default? true))
     (no-op)))
 
 (defn make-receive-source [handler receive-channel]
