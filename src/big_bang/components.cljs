@@ -101,3 +101,24 @@
      [:span.big-bang-component.color-picker
        [:label {:for id-str} label-text]
        element])))
+
+(defn button
+  "Returns a labelled button bound to a channel"
+  [& {:keys [id label-text send-channel]}]
+  (let [id-str (name id)
+        element (node
+                  [:input {:id id-str
+                           :name id-str
+                           :value label-text
+                           :type "button"}])]
+
+    (big-bang
+      :initial-state {}
+      :send-channel send-channel
+      :event-target element
+      :on-click (fn [event world-state]
+                  (let [value (-> event target .-value)]
+                    (make-package value {id value}))))
+
+    (node
+      [:span.big-bang-component.button element])))
